@@ -3,20 +3,22 @@
 
 #include "Graph.hpp"
 #include <string>
-#include <vector>
 
 namespace ariel
 {
+
     class Algorithms
     {
-    private:
-        static bool isContainsCycleUtil(const Graph &graph, size_t vertex, std::vector<bool> &visited, std::vector<bool> &stack);
-
     public:
-        static bool isConnected(const Graph &graph);
-        static std::string shortestPath(const Graph &graph, int start, int end);
-        static bool isContainsCycle(const Graph &graph);
-        static std::string isBipartite(const Graph &graph);
+        static bool isConnected(const Graph &g);
+        static std::string shortestPath(const Graph &g, int start, int end);
+        static std::string isContainsCycle(const Graph &g);
+        static std::string isBipartite(const Graph &g);
+        static void negativeCycle(const Graph &g);
+
+    private:
+        static bool dfs(const std::vector<std::vector<int>> &adjacencyMatrix, std::vector<bool> &visited, int start);
+        static bool isContainsCycleH(const std::vector<std::vector<int>> &adjacencyMatrix, int vertex, std::vector<bool> &visited, int parent, std::vector<int> &cycle);
     };
 }
 

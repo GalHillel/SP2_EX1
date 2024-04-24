@@ -2,21 +2,26 @@
 #define GRAPH_HPP
 
 #include <vector>
+#include <iostream>
 
 namespace ariel
 {
+
     class Graph
     {
     private:
         std::vector<std::vector<int>> adjacencyMatrix;
+        int vertices;
 
     public:
         Graph();
-        ~Graph();
-        void loadGraph(const std::vector<std::vector<int>> &matrix);
+        void loadGraph(const std::vector<std::vector<int>> &graph);
         void printGraph() const;
-        int getSize() const;
-        int getWeight(int from, int to) const;
+        bool isValidGraph(const std::vector<std::vector<int>> &graph) const;
+        int getVertices() const { return vertices; }
+        const std::vector<std::vector<int>> &getAdjacencyMatrix() const { return adjacencyMatrix; }
     };
+
 }
+
 #endif
