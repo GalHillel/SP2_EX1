@@ -1,3 +1,4 @@
+// Id: 211696521 Mail: galh2011@icloud.com
 #include "Algorithms.hpp"
 #include <queue>
 #include <stack>
@@ -288,4 +289,4 @@ namespace ariel
         return true;
     }
 
-} // namespace ariel
+}
