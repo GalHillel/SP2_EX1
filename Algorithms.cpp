@@ -3,6 +3,7 @@
 #include <queue>
 #include <stack>
 #include <limits>
+#include <algorithm>
 
 using namespace std;
 
@@ -13,7 +14,6 @@ namespace ariel
         const std::vector<std::vector<int>> &adjacencyMatrix = g.getAdjacencyMatrix();
         int numVertices = g.getVertices();
 
-        // Cast int to size_type to avoid sign-conversion warnings
         std::vector<bool> visited(static_cast<std::vector<bool>::size_type>(numVertices), false);
 
         // Starts DFS from vertex 0
@@ -29,7 +29,7 @@ namespace ariel
         std::vector<bool> visited(static_cast<std::vector<bool>::size_type>(numVertices), false);
 
         // Perform DFS from the start vertex
-        if (!dfs(adjacencyMatrix, visited, start))
+        if (!dfs(adjacencyMatrix, visited, start) || Algorithms::negativeCycle(g) != "No negative cycle found.")
         {
             // If the end vertex is not reachable from the start vertex, return "-1"
             return "-1";
@@ -111,7 +111,7 @@ namespace ariel
             {
                 // Construct the cycle
                 cycle.push_back(static_cast<int>(vertex));
-                cycle.push_back(static_cast<int>(i));
+                //cycle.push_back(static_cast<int>(i));
                 return true;
             }
         }
@@ -199,7 +199,7 @@ namespace ariel
 
         return output;
     }
-    void Algorithms::negativeCycle(const Graph &g)
+    std::string Algorithms::negativeCycle(const Graph &g)
     {
         // Get the number of vertices in the graph
         std::vector<std::vector<int>>::size_type numVertices = static_cast<std::vector<std::vector<int>>::size_type>(g.getVertices());
@@ -211,19 +211,24 @@ namespace ariel
         std::vector<int> distance(numVertices, std::numeric_limits<int>::max());
         distance[0] = 0; // Assuming source vertex is 0
 
+        // Initialize parent array to store parent vertices in the shortest path tree
+        std::vector<int> parent(numVertices, -1);
+
         // Relax edges repeatedly
+        bool negativeCycleFound = false;
         for (std::vector<std::vector<int>>::size_type i = 0; i < numVertices - 1; ++i)
         {
-            // Iterate through all vertices
             for (std::vector<std::vector<int>>::size_type u = 0; u < numVertices; ++u)
             {
-                // Iterate through all adjacent vertices of u
                 for (std::vector<int>::size_type v = 0; v < numVertices; ++v)
                 {
                     if (adjacencyMatrix[u][v] != 0)
-                    { // If there is an edge from u to v
+                    {
                         if (distance[u] != std::numeric_limits<int>::max() && distance[u] + adjacencyMatrix[u][v] < distance[v])
+                        {
                             distance[v] = distance[u] + adjacencyMatrix[u][v];
+                            parent[v] = u;
+                        }
                     }
                 }
             }
@@ -232,26 +237,47 @@ namespace ariel
         // Check for negative cycles
         for (std::vector<std::vector<int>>::size_type u = 0; u < numVertices; ++u)
         {
-            // Iterate through all adjacent vertices of u
             for (std::vector<int>::size_type v = 0; v < numVertices; ++v)
             {
                 if (adjacencyMatrix[u][v] != 0)
-                { // If there is an edge from u to v
+                {
                     if (distance[u] != std::numeric_limits<int>::max() && distance[u] + adjacencyMatrix[u][v] < distance[v])
                     {
-                        std::cout << "Graph contains negative cycle!" << std::endl;
-                        return;
+                        // Found a negative cycle, construct and return the cycle
+                        std::vector<int> cycle;
+                        int current = v;
+                        while (current != u)
+                        {
+                            if (current == -1)
+                            {
+                                // Cycle detected, but no cycle formed
+                                return "No negative cycle found.";
+                            }
+                            cycle.push_back(current);
+                            current = static_cast<int>(parent[static_cast<std::vector<int>::size_type>(current)]);
+                        }
+                        cycle.push_back(u);
+                        std::reverse(cycle.begin(), cycle.end());
+
+                        std::string cycleStr;
+                        for (int vertex : cycle)
+                        {
+                            cycleStr += std::to_string(vertex) + "->";
+                        }
+                        // Remove the trailing "->"
+                        cycleStr.pop_back();
+                        cycleStr.pop_back();
+                        return "Negative cycle found: " + cycleStr;
                     }
                 }
             }
         }
 
-        std::cout << "Graph does not contain negative cycle." << std::endl;
+        return "No negative cycle found.";
     }
 
     bool Algorithms::dfs(const std::vector<std::vector<int>> &adjacencyMatrix, std::vector<bool> &visited, int start)
     {
-        // Create a stack for DFS
         stack<int> s;
 
         // Push the start vertex to the stack
