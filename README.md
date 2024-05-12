@@ -1,29 +1,60 @@
-# מטלה 1 - גרפים (Classes and Namespaces)
+# Graph Algorithms Implementation
 
-המטרה שלכם במטלה הזאת היא ליצור מחלקה שמייצגת גרף ולממש אלגוריתמים על הגרפים (זה הזמן להזכר בקורס אלגוריתמים 1).
+## Overview
+This project implements a set of graph algorithms using C++. The algorithms include:
+- Connectivity checking
+- Shortest path finding
+- Cycle detection
+- Bipartiteness checking
+- Negative cycle identification in weighted graphs
 
-במטלה הזאת הייצוג של הגרף שלכם יתבצע בעזרת מטריצת שכנויות - https://he.wikipedia.org/wiki/%D7%9E%D7%98%D7%A8%D7%99%D7%A6%D7%AA_%D7%A9%D7%9B%D7%A0%D7%95%D7%AA.
+## Implementation Method
+The implementation consists of two main classes: `Graph` and `Algorithms`, divided into separate header and source files.
 
-הגרף יכול להיות גרף מכוון ולא מכוון וגם גרף ממושקל. מטריצת השכנויות חייבת להיות מטריצה ריבועית.
+### Graph Class
+The `Graph` class represents a graph using an adjacency matrix. It provides methods to load a graph from an adjacency matrix, print the graph, and check if the graph is valid.
 
-עליכם לכתוב את הקבצים הבאים:
+#### Files:
+- `Graph.hpp`: Header file containing the declaration of the `Graph` class.
+- `Graph.cpp`: Source file containing the implementation of the `Graph` class methods.
 
-```
-Graph.cpp
-Algorithms.cpp
-```
+#### Methods:
+1. `isValidGraph(const std::vector<std::vector<int>>& graph)`: Checks if the given graph represented by its adjacency matrix is valid.
+2. `loadGraph(const std::vector<std::vector<int>>& graph)`: Loads a graph from the given adjacency matrix.
 
-הקובץ `Graph.cpp` מכיל מחלקה המייצגת גרף.
-המחלקה מכילה את הפעולות `loadGraph` המקבלת מטריצת שכנויות וטוענת אותה לתוך הגרף ו-`printGraph` שמדפיסה את הייצוג של הגרף (הפורמט לבחירתכם, ראו דוגמה ב-`Demo.cpp`).
+3. `printGraph()`: Prints the adjacency matrix representation of the graph.
 
-הקובץ `Algorithms.cpp` מכיל מימושים לאלגוריתמים על גרפים. ביניהם:
+4. `getVertices()`: Returns the number of vertices in the graph.
 
-- `isConnected(g)` - האלגוריתם מקבל גרף ומחזיר 1 אם הגרף קשיר (אחרת מחזיר 0).
-- `shortestPath(g,start,end)` - האלגוריתם מקבל גרף, קודקוד התחלה וקודקוד סיום ומחזיר את המסלול הקל ביותר (במקרה שהגרף לא ממושקל - הקצר ביותר) בין שני הקודקודים. במידה ואין מסלול כזה, האלגוריתם יחזיר -1.
-- `isContainsCycle(g)` - האלגוריתם מקבל גרף ומדפיס מעגל כלשהו. אם לא קיים מעגל בגרף, האלגוריתם יחזיר 0.
-- `isBipartite(g)` - האלגוריתם מקבל גרף ומחזיר את החלוקה של הגרף לגרף דו-צדדי. אם אי אפשר לחלק את הגרף, האלגוריתם יחזיר 0.
-- `negativeCycle(g)` - האלגוריתם מקבל גרף ומוצא מעגל שלילי (כלומר מעגל שסכום המשקלים של הצלעות שלילי). אם לא קיים מעגל כזה, האלגוריתם ידפיס שלא קיים מעגל שלילי.
+### Algorithms Class
+The `Algorithms` class contains static methods to perform various graph algorithms such as connectivity checking, shortest path finding, cycle detection, bipartiteness checking, and negative cycle identification.
 
-הקובץ `Demo.cpp` מכיל דוגמאות של קלטים ופלטים.
-עליכם לכתוב בתחילת כל קובץ את מספר תעודת הזהות שלכם ואת המייל. כמו כן, בנוסף לקבצים של המטלה אתם נדרשים להגיש גם קובץ README המתאר את אופן המימוש ואת החלוקה שביצעתם בקוד (סוג של מדריך משתמש). אי עמידה בהנחיות תגרור הפחתה בציון. בהצלחה!
-  
+#### Files:
+- `Algorithms.hpp`: Header file containing the declaration of the `Algorithms` class.
+- `Algorithms.cpp`: Source file containing the implementation of the graph algorithms.
+
+#### Methods:
+1. `isConnected(const Graph& graph)`: Checks if the given graph is connected using depth-first search (DFS).
+
+2. `shortestPath(const Graph& graph, int source, int destination)`: Finds the shortest path from a source vertex to a destination vertex using Dijkstra's algorithm.
+
+3. `isContainsCycle(const Graph& graph)`: Checks if the given graph contains a cycle using depth-first search (DFS).
+
+4. `isBipartite(const Graph& graph)`: Checks if the given graph is bipartite using depth-first search (DFS).
+
+5. `negativeCycle(const Graph& graph)`: Identifies if the given weighted graph contains a negative cycle using the Bellman-Ford algorithm.
+
+### Test Program
+The `Test.cpp` file serves as a demonstration of how to use the implemented classes and algorithms. It contains sample graphs and demonstrates the usage of each algorithm.
+
+### Makefile
+The `Makefile` provides targets for building, running, testing, and cleaning the project. It ensures smooth compilation and execution of the program.
+
+## Compilation and Execution
+- Use `make` to compile the project.
+- Run the `test` executable to see the demonstration of graph algorithms.
+
+## Testing
+- Run `make test` to compile and run the test cases.
+- Ensure that all tests pass to verify the correctness of the implementations.
+
